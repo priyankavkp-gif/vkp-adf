@@ -20,7 +20,7 @@
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": "patientCSV",
+							"wildcardFolderPath": "patientCS",
 							"wildcardFileName": "*csv",
 							"enablePartitionDiscovery": false
 						},
@@ -54,6 +54,69 @@
 				"outputs": [
 					{
 						"referenceName": "ds_srcDestDB",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "LogPipelineInfo OnFailure",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Copy PatientData to srcDestDB",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "Select '@{pipeline().DataFactory}' as DataFactoryName,\n'@{pipeline().Pipeline}' as PipelineName,\n'@{pipeline().RunId}' as Pipeline_RunID,\n'@{activity('Copy PatientData to srcDestDB').output.errors[0].Code}' as ErrorCode,\n'@{replace(activity('Copy PatientData to srcDestDB').output.errors[0].Message,'''','')}' as ErrorMessage,\n'@{utcNow()}' as ErrorLoggedTime",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_ErrorInfo",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_ErrorFile",
 						"type": "DatasetReference"
 					}
 				]
