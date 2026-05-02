@@ -1,0 +1,23 @@
+{
+	"name": "ds_patientData",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "lnk_vkpblob",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "patientCSV",
+				"container": "input-folder"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
