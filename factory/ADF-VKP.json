@@ -1,0 +1,15 @@
+{
+	"name": "ADF-VKP",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Enabled",
+			"editable": true
+		}
+	},
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "19fca4a6-f65d-4f31-a5a9-441a73509888",
+		"tenantId": "3188ac5d-283b-48e3-9f73-b9b750cee5c2"
+	}
+}
