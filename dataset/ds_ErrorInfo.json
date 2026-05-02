@@ -1,0 +1,12 @@
+{
+	"name": "ds_ErrorInfo",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "lnk_srcDestDB",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}

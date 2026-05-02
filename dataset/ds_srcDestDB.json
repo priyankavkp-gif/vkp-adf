@@ -1,0 +1,16 @@
+{
+	"name": "ds_srcDestDB",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "lnk_srcDestDB",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "PatientData_ByMonth"
+		}
+	}
+}
