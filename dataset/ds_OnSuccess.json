@@ -1,5 +1,5 @@
 {
-	"name": "ds_patientData",
+	"name": "ds_OnSuccess",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "lnk_vkpblob",
@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"folderPath": "inputPatientDataCSV",
+				"fileName": "OnSuccess.txt",
 				"container": "input-folder"
 			},
 			"columnDelimiter": ",",

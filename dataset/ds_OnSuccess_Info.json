@@ -1,0 +1,12 @@
+{
+	"name": "ds_OnSuccess_Info",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "lnk_srcDestDB",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
