@@ -20,8 +20,8 @@
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": "patientCS",
-							"wildcardFileName": "*csv",
+							"wildcardFolderPath": "inputPatientDataCS",
+							"wildcardFileName": "*.*",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
