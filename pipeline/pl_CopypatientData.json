@@ -20,7 +20,7 @@
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": "inputPatientDataCS",
+							"wildcardFolderPath": "inputPatientDataCSV",
 							"wildcardFileName": "*.*",
 							"enablePartitionDiscovery": false
 						},
@@ -117,6 +117,69 @@
 				"outputs": [
 					{
 						"referenceName": "ds_ErrorFile",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "LogMetrics OnSuccess",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Copy PatientData to srcDestDB",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "Select @{pipeline().DataFactory} as DataFactoryName,\n@{pipeline().Pipeline} as PipelineName,\n@{pipeline().RunId} as RunID,\n@{utcNow()} as LastRun",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_OnSuccess_Info",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_OnSuccess",
 						"type": "DatasetReference"
 					}
 				]
