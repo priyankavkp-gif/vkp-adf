@@ -144,7 +144,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "Select @{pipeline().DataFactory} as DataFactoryName,\n@{pipeline().Pipeline} as PipelineName,\n@{pipeline().RunId} as RunID,\n@{utcNow()} as LastRun",
+							"value": "Select '@{pipeline().DataFactory}' as DataFactoryName,\n'@{pipeline().Pipeline}' as PipelineName,\n'@{pipeline().RunId}' as RunID,\n'@{utcNow()}' as LastRun",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
