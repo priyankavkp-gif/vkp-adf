@@ -56,8 +56,8 @@
 								"storeSettings": {
 									"type": "AzureBlobStorageReadSettings",
 									"recursive": true,
-									"wildcardFolderPath": "patientCS",
-									"wildcardFileName": "*csv",
+									"wildcardFolderPath": "inputPatientDataCSV",
+									"wildcardFileName": "*.*",
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
@@ -160,6 +160,71 @@
 								"parameters": {}
 							}
 						]
+					},
+					{
+						"name": "LogMetrics OnSuccess",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Copy PatientData to srcDestDB",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": {
+									"value": "Select '@{pipeline().DataFactory}' as DataFactoryName,\n'@{pipeline().Pipeline}' as PipelineName,\n'@{pipeline().RunId}' as RunID,\n'@{utcNow()}' as LastRun",
+									"type": "Expression"
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_OnSuccess_Info",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_OnSuccess",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
 					}
 				],
 				"policy": {
@@ -171,7 +236,9 @@
 				"[concat(variables('factoryId'), '/datasets/ds_patientData')]",
 				"[concat(variables('factoryId'), '/datasets/ds_srcDestDB')]",
 				"[concat(variables('factoryId'), '/datasets/ds_ErrorInfo')]",
-				"[concat(variables('factoryId'), '/datasets/ds_ErrorFile')]"
+				"[concat(variables('factoryId'), '/datasets/ds_ErrorFile')]",
+				"[concat(variables('factoryId'), '/datasets/ds_OnSuccess_Info')]",
+				"[concat(variables('factoryId'), '/datasets/ds_OnSuccess')]"
 			]
 		},
 		{
@@ -221,6 +288,52 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_OnSuccess')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "lnk_vkpblob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "OnSuccess.txt",
+						"container": "input-folder"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/lnk_vkpblob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_OnSuccess_Info')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "lnk_srcDestDB",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/lnk_srcDestDB')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_patientData')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -234,7 +347,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"folderPath": "patientCSV",
+						"folderPath": "inputPatientDataCSV",
 						"container": "input-folder"
 					},
 					"columnDelimiter": ",",
