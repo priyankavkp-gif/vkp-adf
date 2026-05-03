@@ -1,0 +1,23 @@
+{
+	"name": "ds_OnSuccess",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "lnk_vkpblob",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "OnSuccess.txt",
+				"container": "input-folder"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
