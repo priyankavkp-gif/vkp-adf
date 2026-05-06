@@ -10,7 +10,7 @@
 		"schema": [],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "PatientData_ByMonth"
+			"table": "PatientData_ByFebruary"
 		}
 	}
 }
