@@ -1,0 +1,7 @@
+{
+	"name": "AzureSqlDatabasePVTnw",
+	"properties": {
+		"privateLinkResourceId": "/subscriptions/3e220b02-de52-4194-8ff8-68ca608307d5/resourceGroups/vkp-res-grp/providers/Microsoft.Sql/servers/pmpvkp",
+		"groupId": "sqlServer"
+	}
+}
