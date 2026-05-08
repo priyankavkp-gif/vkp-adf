@@ -1,9 +1,0 @@
-{
-	"name": "Shir-learnsqldb",
-	"properties": {
-		"type": "SelfHosted",
-		"typeProperties": {
-			"selfContainedInteractiveAuthoringEnabled": true
-		}
-	}
-}
